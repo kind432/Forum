@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <h2><a href="{% url 'categories' %}">{{category.title}}</a>/<a href="{% url 'forums' category_id %}">{{forum.title}}</a>/<a href="{% url 'topics' forum_id %}">{{topic.subject}}</a>/Ответы</h2>
+    <h5><a href="{% url 'categories' %}">{{category.title}}</a>/<a href="{% url 'forums' category_id %}">{{forum.title}}</a>/<a href="{% url 'topics' forum_id %}">{{topic.subject}}</a>/Ответы</h5>
     {% if posts %}
         {% for post in posts %}
             <div class="alert mt-2">

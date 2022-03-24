@@ -8,7 +8,7 @@
     <div class="mb-4">
         <a href="{% url 'new_topic' forum_id %}" class="btn btn-primary">Новая тема</a>
     </div>
-    <h2><a href="{% url 'categories' %}">{{category.title}}</a>/<a href="{% url 'forums' category_id %}">{{forum.title}}</a>/Темы</h2>
+    <h5><a href="{% url 'categories' %}">{{category.title}}</a>/<a href="{% url 'forums' category_id %}">{{forum.title}}</a>/Темы</h5>
     {% if topics %}
         {% for topic in topics %}
             <div class="alert mt-2">

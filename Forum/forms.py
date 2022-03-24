@@ -32,7 +32,7 @@ class ForumsForm(ModelForm):
 class TopicsForm(ModelForm):
     message = forms.CharField(
         widget=forms.Textarea(
-            attrs={'rows': 5, 'placeholder': 'О чем ваша тема?'}
+            attrs={'rows': 5, 'placeholder': 'Сообщение'}
         ),
         max_length=4000,
         help_text='Максимальная длина текста 4000 символов.',

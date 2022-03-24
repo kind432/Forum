@@ -8,15 +8,29 @@
     <div class="mb-4">
         <a href="{% url 'new_forum' category_id %}" class="btn btn-primary">Новый форум</a>
     </div>
-    <h1>Форумы</h1>
+    <h2><a href="{% url 'categories' %}">{{category.title}}</a>/Форумы</h2>
     {% if forums %}
         {% for forum in forums %}
             <div class="alert mt-2">
                 <h3><a href="{{ forum.get_absolute_url }}">{{ forum.title }}</a></h3>
                 <p>{{ forum.description }}</p>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button"
+                            id="about-us" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">Действие</button>
+                    <div class="dropdown-menu" aria-labelledby="about-us">
+                        <a class="dropdown-item" href="#">Изменить</a>
+                        <a class="dropdown-item" href="#">Удалить</a>
+                    </div>
+                </div>
             </div>
         {% endfor %}
     {% else %}
         <p>Форумы не найдены...</p>
     {% endif %}
+{% endblock %}
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 {% endblock %}

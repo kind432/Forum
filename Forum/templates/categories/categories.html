@@ -8,15 +8,29 @@
     <div class="mb-4">
         <a href="{% url 'new_category' %}" class="btn btn-primary">Новая категория</a>
     </div>
-    <h1>Категории</h1>
+    <h2>Категории</h2>
     {% if categories %}
         {% for category in categories %}
             <div class="alert mt-2">
                 <h3><a href="{{ category.get_absolute_url }}">{{ category.title }}</a></h3>
                 <p>{{ category.description }}</p>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button"
+                            id="about-us" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">Действие</button>
+                    <div class="dropdown-menu" aria-labelledby="about-us">
+                        <a class="dropdown-item" href="#">Изменить</a>
+                        <a class="dropdown-item" href="#">Удалить</a>
+                    </div>
+                </div>
             </div>
         {% endfor %}
     {% else %}
         <p>Категории не найдены...</p>
     {% endif %}
+{% endblock %}
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 {% endblock %}

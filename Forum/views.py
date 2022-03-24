@@ -40,11 +40,13 @@ def new_category(request):
 def forums_view(request, category_id):
     try:
         forums = ForumsModel.objects.filter(category = category_id)
+        category = CategoriesModel.objects.get(id = category_id)
     except ForumsModel.DoesNotExist:
         raise Http404
     context = {
         'title': 'Форумы',
         'forums': forums,
+        'category': category,
         'category_id': category_id,
     }
     return render(request, 'forums/forums.html', context)
@@ -65,19 +67,24 @@ def new_forum(request, category_id):
 #Темы
 def topics_view(request, forum_id):
     try:
-        topics = TopicsModel.objects.filter(forum = forum_id)
+        topics = TopicsModel.objects.filter(forum=forum_id)
+        forum = ForumsModel.objects.get(id=forum_id)
+        category = CategoriesModel.objects.get(id=forum.category.id)
     except TopicsModel.DoesNotExist:
         raise Http404
     context = {
         'title': 'Темы',
         'topics': topics,
         'forum_id': forum_id,
+        'category_id': category.id,
+        'forum': forum,
+        'category': category,
     }
     return render(request, 'topics/topics.html', context)
 
 def new_topic(request, forum_id):
-    forum = get_object_or_404(ForumsModel, id = forum_id)
-    user = User.objects.first()
+    forum = get_object_or_404(ForumsModel, id=forum_id)
+    user = request.user
     if request.method == 'POST':
         form = TopicsForm(request.POST)
         if form.is_valid():
@@ -90,7 +97,7 @@ def new_topic(request, forum_id):
                 topic=topic,
                 created_by=user
             )
-            return redirect('topics', forum_id = forum.id)
+            return redirect('topics', forum_id=forum.id)
     else:
         form = TopicsForm()
     return render(request, 'topics/new_topic.html', {'forum': forum, 'form': form})
@@ -99,10 +106,12 @@ def new_topic(request, forum_id):
 def posts_view(request, topic_id):
     try:
         topic = get_object_or_404(TopicsModel, id=topic_id)
+        forum = ForumsModel.objects.get(id=topic.forum.id)
+        category = CategoriesModel.objects.get(id=forum.category.id)
         posts = PostsModel.objects.filter(topic=topic_id)
     except PostsModel.DoesNotExist:
         raise Http404
-    user = User.objects.first()
+    user = request.user
     if request.method == 'POST':
         form = PostsForm(request.POST)
         if form.is_valid():
@@ -118,5 +127,11 @@ def posts_view(request, topic_id):
         'title': 'Ответы',
         'posts': posts,
         'form': form,
+        'category_id': forum.category.id,
+        'forum_id': forum.id,
+        'topic_id': topic.id,
+        'topic': topic,
+        'forum': forum,
+        'category': category,
     }
     return render(request, 'posts/posts.html', context)

@@ -98,11 +98,25 @@ def new_topic(request, forum_id):
 #посты
 def posts_view(request, topic_id):
     try:
-        posts = PostsModel.objects.filter(topic = topic_id)
+        topic = get_object_or_404(TopicsModel, id=topic_id)
+        posts = PostsModel.objects.filter(topic=topic_id)
     except PostsModel.DoesNotExist:
         raise Http404
+    user = User.objects.first()
+    if request.method == 'POST':
+        form = PostsForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.topic = topic
+            post.created_by = user
+            post.save()
+            return redirect('posts', topic_id = topic.id)
+    else:
+        form = PostsForm()
+
     context = {
         'title': 'Ответы',
         'posts': posts,
+        'form': form,
     }
     return render(request, 'posts/posts.html', context)

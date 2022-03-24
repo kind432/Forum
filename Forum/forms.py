@@ -42,3 +42,17 @@ class TopicsForm(ModelForm):
     class Meta:
         model = TopicsModel
         fields = ['subject', 'message']
+
+class PostsForm(ModelForm):
+    message = forms.CharField(
+        widget=forms.Textarea(
+            attrs={'rows': 5}
+        ),
+        max_length=4000,
+        help_text='Максимальная длина текста 4000 символов.',
+        label='Сообщение'
+    )
+
+    class Meta:
+        model = PostsModel
+        fields = ['message']

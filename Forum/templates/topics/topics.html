@@ -1,0 +1,22 @@
+{% extends 'includes/base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+    <div class="mb-4">
+        <a href="{% url 'new_topic' forum_id %}" class="btn btn-primary">Новая тема</a>
+    </div>
+    <h1>Темы</h1>
+    {% if topics %}
+        {% for topic in topics %}
+            <div class="alert mt-2">
+                <h3><a href="{{ topic.get_absolute_url }}">{{ topic.subject }}</a></h3>
+                <p>{{ topic.last_updated }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Темы не найдены...</p>
+    {% endif %}
+{% endblock %}

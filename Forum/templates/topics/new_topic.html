@@ -1,0 +1,14 @@
+{% extends 'includes/base.html' %}
+{% load widget_tweaks %}
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+    <h1>Новый форум</h1>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% include 'includes/form.html' %}
+        <button type="submit" class="btn btn-success">Создать</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'includes/base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+    <div class="mb-4">
+        <a href="{% url 'new_forum' category_id %}" class="btn btn-primary">Новый форум</a>
+    </div>
+    <h1>Форумы</h1>
+    {% if forums %}
+        {% for forum in forums %}
+            <div class="alert mt-2">
+                <h3><a href="{{ forum.get_absolute_url }}">{{ forum.title }}</a></h3>
+                <p>{{ forum.description }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Форумы не найдены...</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'includes/base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+    <h1>Ответы</h1>
+    {% if posts %}
+        {% for post in posts %}
+            <div class="alert mt-2">
+                <h5>{{ post.message }}</h5>
+                <p>{{ post.created_by }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Ответы не найдены...</p>
+    {% endif %}
+{% endblock %}

@@ -35,7 +35,35 @@ def new_category(request):
     else:
         form = CategoriesForm()
     return render(request, 'categories/new_category.html', context={'form': form})
+#изменение категории
+def category_update(request,category_id):
+    try:
+        old_data = get_object_or_404(CategoriesModel,id = category_id)
+    except Exception:
+        raise Http404('Category Not Found')
+    if request.method == 'POST':
+        form = CategoriesForm(request.POST, instance=old_data)
+        if form.is_valid():
+            form.save()
+            return redirect('categories')
+    else:
+        form = CategoriesForm(instance=old_data)
+        context = {
+            'form': form
+        }
+        return render(request, 'categories/change.html', context)
 
+#Удаление категории
+def category_delete(request, category_id):
+    try:
+        data = get_object_or_404(CategoriesModel,id=category_id)
+    except Exception:
+        raise Http404('Category not find')
+    if request.method == 'POST':
+        data.delete()
+        return redirect('categories')
+    else:
+        return render(request, 'categories/delete.html')
 #Форумы
 def forums_view(request, category_id):
     try:

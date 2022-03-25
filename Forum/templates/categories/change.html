@@ -1,10 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'includes/base.html' %}
+{% load widget_tweaks %}
+{% block title %}
+{{ title }}
+{% endblock %}
 
-</body>
-</html>
+{% block content %}
+    <h1>Редактирование категории</h1>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% include 'includes/form.html' %}
+        <button type="submit" class="btn btn-success">Изменить</button>
+    </form>
+{% endblock %}

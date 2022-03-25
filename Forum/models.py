@@ -12,6 +12,8 @@ class CategoriesModel(models.Model):
 
     def get_absolute_url(self):
         return reverse('forums', kwargs={'category_id': self.id})
+    def get_id(self):
+        return self.id
 
     class Meta:
         verbose_name = 'Категория'

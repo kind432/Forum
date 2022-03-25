@@ -30,6 +30,8 @@ class ForumsModel(models.Model):
 
     def get_absolute_url(self):
         return reverse('topics', kwargs={'forum_id': self.id})
+    def get_id(self):
+        return self.id
 
     class Meta:
         verbose_name = 'Форум'
@@ -46,6 +48,8 @@ class TopicsModel(models.Model):
 
     def get_absolute_url(self):
         return reverse('posts', kwargs={'topic_id': self.id})
+    def get_id(self):
+        return self.id
 
     class Meta:
         verbose_name = 'Тема'
@@ -61,6 +65,8 @@ class PostsModel(models.Model):
 
     def __str__(self):
         return self.message
+    def get_id(self):
+        return self.id
 
     class Meta:
         verbose_name = 'Пост'

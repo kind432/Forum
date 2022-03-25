@@ -51,7 +51,7 @@ def category_update(request,category_id):
         context = {
             'form': form
         }
-        return render(request, 'categories/change.html', context)
+        return render(request, 'change.html', context)
 
 #Удаление категории
 def category_delete(request, category_id):
@@ -63,7 +63,7 @@ def category_delete(request, category_id):
         data.delete()
         return redirect('categories')
     else:
-        return render(request, 'categories/delete.html')
+        return render(request, 'delete.html')
 #Форумы
 def forums_view(request, category_id):
     try:
@@ -91,7 +91,35 @@ def new_forum(request, category_id):
     else:
         form = ForumsForm()
     return render(request, 'forums/new_forum.html', context={'form': form})
+#изменение форума
+def forum_update(request,forum_id):
+    try:
+        old_data = get_object_or_404(ForumsModel,id = forum_id)
+    except Exception:
+        raise Http404('Forum Not Found')
+    if request.method == 'POST':
+        form = ForumsForm(request.POST, instance=old_data)
+        if form.is_valid():
+            form.save()
+            return redirect('categories')
+    else:
+        form = ForumsForm(instance=old_data)
+        context = {
+            'form': form
+        }
+        return render(request, 'change.html', context)
 
+#Удаление форума
+def forum_delete(request, forum_id):
+    try:
+        data = get_object_or_404(ForumsModel,id=forum_id)
+    except Exception:
+        raise Http404('Forum not find')
+    if request.method == 'POST':
+        data.delete()
+        return redirect('categories')
+    else:
+        return render(request, 'delete.html')
 #Темы
 def topics_view(request, forum_id):
     try:
@@ -129,7 +157,35 @@ def new_topic(request, forum_id):
     else:
         form = TopicsForm()
     return render(request, 'topics/new_topic.html', {'forum': forum, 'form': form})
+#изменение топика
+def topic_update(request,topic_id):
+    try:
+        old_data = get_object_or_404(TopicsModel,id = topic_id)
+    except Exception:
+        raise Http404('Topic Not Found')
+    if request.method == 'POST':
+        form = TopicsForm(request.POST, instance=old_data)
+        if form.is_valid():
+            form.save()
+            return redirect('categories')
+    else:
+        form = TopicsForm(instance=old_data)
+        context = {
+            'form': form
+        }
+        return render(request, 'change.html', context)
 
+#Удаление топика
+def topic_delete(request, topic_id):
+    try:
+        data = get_object_or_404(TopicsModel,id=topic_id)
+    except Exception:
+        raise Http404('Category not find')
+    if request.method == 'POST':
+        data.delete()
+        return redirect('categories')
+    else:
+        return render(request, 'delete.html')
 #посты
 def posts_view(request, topic_id):
     try:
@@ -163,3 +219,32 @@ def posts_view(request, topic_id):
         'category': category,
     }
     return render(request, 'posts/posts.html', context)
+#изменение поста
+def post_update(request,post_id):
+    try:
+        old_data = get_object_or_404(PostsModel,id = post_id)
+    except Exception:
+        raise Http404('Post Not Found')
+    if request.method == 'POST':
+        form = PostsForm(request.POST, instance=old_data)
+        if form.is_valid():
+            form.save()
+            return redirect('categories')
+    else:
+        form = PostsForm(instance=old_data)
+        context = {
+            'form': form
+        }
+        return render(request, 'change.html', context)
+
+#Удаление категории
+def post_delete(request, post_id):
+    try:
+        data = get_object_or_404(PostsModel,id=post_id)
+    except Exception:
+        raise Http404('Post not find')
+    if request.method == 'POST':
+        data.delete()
+        return redirect('categories')
+    else:
+        return render(request, 'delete.html')

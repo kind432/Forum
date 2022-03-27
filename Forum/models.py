@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 
 
+
 class CategoriesModel(models.Model):
     title = models.CharField('Название', max_length=30, unique=True)
     description = models.TextField('Описание', max_length=100)
@@ -43,6 +44,8 @@ class TopicsModel(models.Model):
     forum = models.ForeignKey(ForumsModel, related_name='Темы', on_delete=models.CASCADE)
     starter = models.ForeignKey(User, related_name='Темы', on_delete=models.CASCADE)
 
+
+
     def __str__(self):
         return self.subject
 
@@ -55,6 +58,7 @@ class TopicsModel(models.Model):
         verbose_name = 'Тема'
         verbose_name_plural = 'Темы'
 
+
 class PostsModel(models.Model):
     message = models.TextField('Сообщение', max_length=4000)
     topic = models.ForeignKey(TopicsModel, related_name='posts', on_delete=models.CASCADE)
@@ -62,6 +66,7 @@ class PostsModel(models.Model):
     updated_at = models.DateTimeField('Изменено в', null=True)
     created_by = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     updated_by = models.ForeignKey(User, null=True, related_name='+', on_delete=models.CASCADE)
+    first_post = models.BooleanField(null = True)
 
     def __str__(self):
         return self.message

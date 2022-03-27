@@ -10,8 +10,13 @@
         {% for post in posts %}
             <div class="alert mt-2">
                 <p>{{ post.message }}</p>
-                <p>{{post.created_at}}</p>
-                <p>Автор: {{ post.created_by }}</p>
+                 {% if post.updated_at == None %}
+                    <p>{{post.created_at}}</p>
+                     <p>Автор: {{ post.created_by }}</p>
+                {% else %}
+                    <p>{{post.updated_at}}</p>
+                     <p>Изменил: {{ post.updated_by }}</p>
+                {% endif %}
                 <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button"
                             id="about-us" data-toggle="dropdown" aria-haspopup="true"

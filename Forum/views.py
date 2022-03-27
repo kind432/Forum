@@ -1,3 +1,5 @@
+import datetime
+
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, Group
@@ -151,6 +153,7 @@ def new_topic(request, forum_id):
             post = PostsModel.objects.create(
                 message=form.cleaned_data.get('message'),
                 topic=topic,
+                first_post=True,
                 created_by=user
             )
             return redirect('topics', forum_id=forum.id)
@@ -159,6 +162,10 @@ def new_topic(request, forum_id):
     return render(request, 'topics/new_topic.html', {'forum': forum, 'form': form})
 #изменение топика
 def topic_update(request,topic_id):
+    user = request.user
+    first_message = PostsModel.objects.get(topic_id=topic_id,first_post=True)
+
+
     try:
         old_data = get_object_or_404(TopicsModel,id = topic_id)
     except Exception:
@@ -166,6 +173,11 @@ def topic_update(request,topic_id):
     if request.method == 'POST':
         form = TopicsForm(request.POST, instance=old_data)
         if form.is_valid():
+
+            first_message.message = form.cleaned_data.get('message')
+            first_message.updated_at = datetime.datetime.now()
+            first_message.updated_by = request.user
+            first_message.save()
             form.save()
             return redirect('categories')
     else:
@@ -226,8 +238,11 @@ def post_update(request,post_id):
     except Exception:
         raise Http404('Post Not Found')
     if request.method == 'POST':
+        old_data.updated_by=request.user
+        old_data.updated_at=datetime.datetime.now()
         form = PostsForm(request.POST, instance=old_data)
         if form.is_valid():
+
             form.save()
             return redirect('categories')
     else:

@@ -31,11 +31,16 @@
     {% else %}
         <p>Ответы не найдены...</p>
     {% endif %}
+    {% if user.is_authenticated %}
     <form method="post" novalidate>
         {% csrf_token %}
         {% include 'includes/form.html' %}
         <button type="submit" class="btn btn-success">Отправить</button>
     </form>
+        {% else %}
+    <p>Чтобы написать сообщение необходимо создать аккаунт!</p>
+   {% endif %}
+
 {% endblock %}
 {% block scripts %}
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>

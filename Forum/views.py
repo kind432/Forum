@@ -3,6 +3,7 @@ import datetime
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, Group
+from django.contrib.auth.decorators import permission_required
 from .forms import *
 from .models import *
 # Create your views here.
@@ -26,7 +27,7 @@ def categories_view(request):
         'categories': categories,
     }
     return render(request, 'categories/categories.html', context)
-
+@permission_required('Forum.add_categoriesmodel')
 #Новая категория
 def new_category(request):
     if request.method == 'POST':
@@ -38,6 +39,7 @@ def new_category(request):
         form = CategoriesForm()
     return render(request, 'categories/new_category.html', context={'form': form})
 #изменение категории
+@permission_required('Forum.change_categoriesmodel')
 def category_update(request,category_id):
     try:
         old_data = get_object_or_404(CategoriesModel,id = category_id)
@@ -54,7 +56,7 @@ def category_update(request,category_id):
             'form': form
         }
         return render(request, 'change.html', context)
-
+@permission_required('Forum.delete_categoriesmodel')
 #Удаление категории
 def category_delete(request, category_id):
     try:
@@ -80,7 +82,7 @@ def forums_view(request, category_id):
         'category_id': category_id,
     }
     return render(request, 'forums/forums.html', context)
-
+@permission_required('Forum.add_forumsmodel')
 def new_forum(request, category_id):
     category = get_object_or_404(CategoriesModel, id=category_id)
     if request.method == 'POST':
@@ -94,6 +96,7 @@ def new_forum(request, category_id):
         form = ForumsForm()
     return render(request, 'forums/new_forum.html', context={'form': form})
 #изменение форума
+@permission_required('Forum.change_forumsmodel')
 def forum_update(request,forum_id):
     try:
         old_data = get_object_or_404(ForumsModel,id = forum_id)
@@ -112,6 +115,7 @@ def forum_update(request,forum_id):
         return render(request, 'change.html', context)
 
 #Удаление форума
+@permission_required('Forum.delete_forumsmodel')
 def forum_delete(request, forum_id):
     try:
         data = get_object_or_404(ForumsModel,id=forum_id)
@@ -139,7 +143,7 @@ def topics_view(request, forum_id):
         'category': category,
     }
     return render(request, 'topics/topics.html', context)
-
+@permission_required('Forum.add_topicsmodel')
 def new_topic(request, forum_id):
     forum = get_object_or_404(ForumsModel, id=forum_id)
     user = request.user
@@ -161,6 +165,7 @@ def new_topic(request, forum_id):
         form = TopicsForm()
     return render(request, 'topics/new_topic.html', {'forum': forum, 'form': form})
 #изменение топика
+@permission_required('Forum.change_topicsmodel')
 def topic_update(request,topic_id):
     user = request.user
     first_message = PostsModel.objects.get(topic_id=topic_id,first_post=True)
@@ -188,6 +193,7 @@ def topic_update(request,topic_id):
         return render(request, 'change.html', context)
 
 #Удаление топика
+@permission_required('Forum.delete_topicsmodel')
 def topic_delete(request, topic_id):
     try:
         data = get_object_or_404(TopicsModel,id=topic_id)
@@ -199,6 +205,7 @@ def topic_delete(request, topic_id):
     else:
         return render(request, 'delete.html')
 #посты
+
 def posts_view(request, topic_id):
     try:
         topic = get_object_or_404(TopicsModel, id=topic_id)
@@ -232,6 +239,7 @@ def posts_view(request, topic_id):
     }
     return render(request, 'posts/posts.html', context)
 #изменение поста
+@permission_required('Forum.change_postsmodel')
 def post_update(request,post_id):
     try:
         old_data = get_object_or_404(PostsModel,id = post_id)
@@ -253,6 +261,7 @@ def post_update(request,post_id):
         return render(request, 'change.html', context)
 
 #Удаление категории
+@permission_required('Forum.delete_postsmodel')
 def post_delete(request, post_id):
     try:
         data = get_object_or_404(PostsModel,id=post_id)

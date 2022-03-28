@@ -28,6 +28,7 @@ def categories_view(request):
     }
     return render(request, 'categories/categories.html', context)
 @permission_required('Forum.add_categoriesmodel')
+
 #Новая категория
 def new_category(request):
     if request.method == 'POST':
@@ -37,7 +38,11 @@ def new_category(request):
             return redirect('categories')
     else:
         form = CategoriesForm()
-    return render(request, 'categories/new_category.html', context={'form': form})
+        context = {
+            'form': form,
+        }
+    return render(request, 'categories/new_category.html', context)
+
 #изменение категории
 @permission_required('Forum.change_categoriesmodel')
 def category_update(request,category_id):
@@ -53,10 +58,13 @@ def category_update(request,category_id):
     else:
         form = CategoriesForm(instance=old_data)
         context = {
-            'form': form
+            'form': form,
+            'old_category': old_data,
         }
-        return render(request, 'change.html', context)
+    return render(request, 'categories/change.html', context)
+
 @permission_required('Forum.delete_categoriesmodel')
+
 #Удаление категории
 def category_delete(request, category_id):
     try:
@@ -68,6 +76,7 @@ def category_delete(request, category_id):
         return redirect('categories')
     else:
         return render(request, 'delete.html')
+
 #Форумы
 def forums_view(request, category_id):
     try:
@@ -79,9 +88,10 @@ def forums_view(request, category_id):
         'title': 'Форумы',
         'forums': forums,
         'category': category,
-        'category_id': category_id,
     }
     return render(request, 'forums/forums.html', context)
+
+#Новый форум
 @permission_required('Forum.add_forumsmodel')
 def new_forum(request, category_id):
     category = get_object_or_404(CategoriesModel, id=category_id)
@@ -94,38 +104,48 @@ def new_forum(request, category_id):
             return redirect('forums', category_id = category.id)
     else:
         form = ForumsForm()
-    return render(request, 'forums/new_forum.html', context={'form': form})
-#изменение форума
+        context = {
+            'form': form,
+            'category': category,
+        }
+    return render(request, 'forums/new_forum.html', context)
+
+#Изменение форума
 @permission_required('Forum.change_forumsmodel')
 def forum_update(request,forum_id):
     try:
         old_data = get_object_or_404(ForumsModel,id = forum_id)
+        category = get_object_or_404(CategoriesModel, id = old_data.category.id)
     except Exception:
         raise Http404('Forum Not Found')
     if request.method == 'POST':
         form = ForumsForm(request.POST, instance=old_data)
         if form.is_valid():
             form.save()
-            return redirect('categories')
+            return redirect('forums', category.id)
     else:
         form = ForumsForm(instance=old_data)
         context = {
-            'form': form
+            'form': form,
+            'category': category,
+            'old_forum': old_data,
         }
-        return render(request, 'change.html', context)
+        return render(request, 'forums/change.html', context)
 
 #Удаление форума
 @permission_required('Forum.delete_forumsmodel')
 def forum_delete(request, forum_id):
     try:
         data = get_object_or_404(ForumsModel,id=forum_id)
+        category_id = data.category.id
     except Exception:
         raise Http404('Forum not find')
     if request.method == 'POST':
         data.delete()
-        return redirect('categories')
+        return redirect('forums', category_id)
     else:
         return render(request, 'delete.html')
+
 #Темы
 def topics_view(request, forum_id):
     try:
@@ -137,15 +157,16 @@ def topics_view(request, forum_id):
     context = {
         'title': 'Темы',
         'topics': topics,
-        'forum_id': forum_id,
-        'category_id': category.id,
         'forum': forum,
         'category': category,
     }
     return render(request, 'topics/topics.html', context)
+
+#Новый топик
 @permission_required('Forum.add_topicsmodel')
 def new_topic(request, forum_id):
     forum = get_object_or_404(ForumsModel, id=forum_id)
+    category = get_object_or_404(CategoriesModel, id=forum.category.id)
     user = request.user
     if request.method == 'POST':
         form = TopicsForm(request.POST)
@@ -163,28 +184,32 @@ def new_topic(request, forum_id):
             return redirect('topics', forum_id=forum.id)
     else:
         form = TopicsForm()
-    return render(request, 'topics/new_topic.html', {'forum': forum, 'form': form})
+        context = {
+            'category': category,
+            'forum': forum,
+            'form': form,
+        }
+    return render(request, 'topics/new_topic.html', context)
+
 #изменение топика
 @permission_required('Forum.change_topicsmodel')
 def topic_update(request,topic_id):
-    user = request.user
     first_message = PostsModel.objects.get(topic_id=topic_id,first_post=True)
-
-
     try:
         old_data = get_object_or_404(TopicsModel,id = topic_id)
+        forum = get_object_or_404(ForumsModel, id = old_data.forum.id)
+        category = get_object_or_404(CategoriesModel, id = forum.category.id)
     except Exception:
         raise Http404('Topic Not Found')
     if request.method == 'POST':
         form = TopicsForm(request.POST, instance=old_data)
         if form.is_valid():
-
             first_message.message = form.cleaned_data.get('message')
             first_message.updated_at = datetime.datetime.now()
             first_message.updated_by = request.user
             first_message.save()
             form.save()
-            return redirect('categories')
+            return redirect('topics', forum_id=forum.id)
     else:
         data = {
             'subject': old_data.subject,
@@ -192,25 +217,28 @@ def topic_update(request,topic_id):
         }
         form = TopicsForm(data)
         context = {
-
-            'form': form
+            'form': form,
+            'category': category,
+            'forum': forum,
+            'old_topic': old_data,
         }
-        return render(request, 'change.html', context)
+        return render(request, 'topics/change.html', context)
 
 #Удаление топика
 @permission_required('Forum.delete_topicsmodel')
 def topic_delete(request, topic_id):
     try:
         data = get_object_or_404(TopicsModel,id=topic_id)
+        forum_id = data.forum.id
     except Exception:
         raise Http404('Category not find')
     if request.method == 'POST':
         data.delete()
-        return redirect('categories')
+        return redirect('topics', forum_id)
     else:
         return render(request, 'delete.html')
-#посты
 
+#посты
 def posts_view(request, topic_id):
     try:
         topic = get_object_or_404(TopicsModel, id=topic_id)
@@ -220,7 +248,6 @@ def posts_view(request, topic_id):
     except PostsModel.DoesNotExist:
         raise Http404
     user = request.user
-    form = None
     if request.method == 'POST':
         if user.groups.all():
             form = PostsForm(request.POST)
@@ -232,27 +259,26 @@ def posts_view(request, topic_id):
                 return redirect('posts', topic_id = topic.id)
         else:
             return render(request,'posts/error.html')
-
     else:
         form = PostsForm()
-
     context = {
         'title': 'Ответы',
         'posts': posts,
         'form': form,
-        'category_id': forum.category.id,
-        'forum_id': forum.id,
-        'topic_id': topic.id,
         'topic': topic,
         'forum': forum,
         'category': category,
     }
     return render(request, 'posts/posts.html', context)
+
 #изменение поста
 @permission_required('Forum.change_postsmodel')
 def post_update(request,post_id):
     try:
         old_data = get_object_or_404(PostsModel,id = post_id)
+        topic = get_object_or_404(TopicsModel, id = old_data.topic.id)
+        forum = get_object_or_404(ForumsModel, id = topic.forum.id)
+        category = get_object_or_404(CategoriesModel, id = forum.category.id)
     except Exception:
         raise Http404('Post Not Found')
     if request.method == 'POST':
@@ -260,26 +286,30 @@ def post_update(request,post_id):
         old_data.updated_at=datetime.datetime.now()
         form = PostsForm(request.POST, instance=old_data)
         if form.is_valid():
-
             form.save()
-            return redirect('categories')
+            return redirect('posts', topic_id = topic.id)
     else:
         form = PostsForm(instance=old_data)
         context = {
-            'form': form
+            'form': form,
+            'category': category,
+            'forum': forum,
+            'topic': topic,
+            'old_post': old_data,
         }
-        return render(request, 'change.html', context)
+        return render(request, 'posts/change.html', context)
 
-#Удаление категории
+#Удаление поста
 @permission_required('Forum.delete_postsmodel')
 def post_delete(request, post_id):
     try:
         data = get_object_or_404(PostsModel,id=post_id)
+        topic_id = data.topic.id
     except Exception:
         raise Http404('Post not find')
     if request.method == 'POST':
         data.delete()
-        return redirect('categories')
+        return redirect('posts', topic_id)
     else:
         return render(request, 'delete.html')
 

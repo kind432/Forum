@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="mb-4">
-        <a href="{% url 'new_forum' category_id %}" class="btn btn-primary">Новый форум</a>
+        <a href="{% url 'new_forum' category.id %}" class="btn btn-primary">Новый форум</a>
     </div>
     <h5><a href="{% url 'categories' %}">{{category.title}}</a>/Форумы</h5>
     {% if forums %}

@@ -5,10 +5,11 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Новый форум</h1>
+    <h5><a href="{% url 'categories' %}">{{ category.title }}</a>/<a href="{% url 'forums' category.id %}">Форумы</a>/Новый форум</h5>
     <form method="post" novalidate>
         {% csrf_token %}
         {% include 'includes/form.html' %}
         <button type="submit" class="btn btn-success">Создать</button>
+        <a href="{% url 'forums' category.id %}" class="btn btn-secondary">Отмена</a>
     </form>
 {% endblock %}

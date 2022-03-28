@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Новая категория</h1>
+    <h5><a href="{% url 'categories' %}">Категории</a>/Новая категория</h5>
     <form method="post" novalidate>
         {% csrf_token %}
         {% include 'includes/form.html' %}

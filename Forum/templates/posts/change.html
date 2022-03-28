@@ -6,11 +6,11 @@
 
 {% block content %}
     <h5><a href="{% url 'categories' %}">{{ category.title }}</a>/<a href="{% url 'forums' category.id %}">{{ forum.title }}</a>/<a
-            href="{% url 'topics' forum.id %}">Темы</a>/Новая тема</h5>
+            href="{% url 'topics' forum.id %}">{{ topic.subject }}</a>/<a href="{% url 'posts' topic.id %}">Ответы</a>/Изменение ответа</h5>
     <form method="post" novalidate>
         {% csrf_token %}
         {% include 'includes/form.html' %}
-        <button type="submit" class="btn btn-success">Создать</button>
-        <a href="{% url 'topics' forum.id %}" class="btn btn-secondary">Отмена</a>
+        <button type="submit" class="btn btn-success">Изменить</button>
+        <a href="{% url 'posts' topic.id %}" class="btn btn-secondary">Отмена</a>
     </form>
 {% endblock %}

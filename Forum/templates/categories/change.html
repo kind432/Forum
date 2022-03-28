@@ -1,0 +1,15 @@
+{% extends 'includes/base.html' %}
+{% load widget_tweaks %}
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+    <h5><a href="{% url 'categories' %}">Категории</a>/Изменение категории: {{ old_category.title }}</h5>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% include 'includes/form.html' %}
+        <button type="submit" class="btn btn-success">Изменить</button>
+        <a href="{% url 'categories' %}" class="btn btn-secondary">Отмена</a>
+    </form>
+{% endblock %}

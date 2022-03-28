@@ -10,5 +10,6 @@
         {% csrf_token %}
         {% include 'includes/form.html' %}
         <button type="submit" class="btn btn-success">Создать</button>
+        <a href="{% url 'categories' %}" class="btn btn-secondary">Отмена</a>
     </form>
 {% endblock %}

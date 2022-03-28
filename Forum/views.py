@@ -173,10 +173,12 @@ def topic_update(request,topic_id):
 
     try:
         old_data = get_object_or_404(TopicsModel,id = topic_id)
+        print(old_data)
     except Exception:
         raise Http404('Topic Not Found')
     if request.method == 'POST':
         form = TopicsForm(request.POST, instance=old_data)
+
         if form.is_valid():
 
             first_message.message = form.cleaned_data.get('message')
@@ -186,8 +188,14 @@ def topic_update(request,topic_id):
             form.save()
             return redirect('categories')
     else:
-        form = TopicsForm(instance=old_data)
+        data = {
+            'subject': old_data.subject,
+            'message': first_message.message
+        }
+        form = TopicsForm(data)
+
         context = {
+
             'form': form
         }
         return render(request, 'change.html', context)

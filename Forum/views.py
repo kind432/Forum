@@ -215,14 +215,19 @@ def posts_view(request, topic_id):
     except PostsModel.DoesNotExist:
         raise Http404
     user = request.user
+    form = None
     if request.method == 'POST':
-        form = PostsForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.topic = topic
-            post.created_by = user
-            post.save()
-            return redirect('posts', topic_id = topic.id)
+        if user.groups.all():
+            form = PostsForm(request.POST)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.topic = topic
+                post.created_by = user
+                post.save()
+                return redirect('posts', topic_id = topic.id)
+        else:
+            return render(request,'posts/error.html')
+
     else:
         form = PostsForm()
 

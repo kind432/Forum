@@ -8,11 +8,11 @@
     <div class="mb-4">
         <a href="{% url 'new_forum' category.id %}" class="btn btn-primary">Новый форум</a>
     </div>
-    <h5><a href="{% url 'categories' %}">{{category.title}}</a>/Форумы</h5>
+    <h5><a class="text-decoration-none" href="{% url 'categories' %}">{{category.title}}</a>/Форумы</h5>
     {% if forums %}
         {% for forum in forums %}
             <div class="alert mt-2">
-                <h3><a href="{{ forum.get_absolute_url }}">{{ forum.title }}</a></h3>
+                <h3><a class="text-decoration-none" href="{{ forum.get_absolute_url }}">{{ forum.title }}</a></h3>
                 <p>{{ forum.description }}</p>
                 <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button"

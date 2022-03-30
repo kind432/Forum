@@ -12,7 +12,7 @@
     {% if categories %}
         {% for category in categories %}
             <div class="alert mt-2">
-                <h3><a href="{{ category.get_absolute_url }}">{{ category.title }}</a></h3>
+                <h3><a class="text-decoration-none" href="{{ category.get_absolute_url }}">{{ category.title }}</a></h3>
                 <p>{{ category.description }}</p>
                 <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button"

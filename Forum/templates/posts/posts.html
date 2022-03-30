@@ -5,25 +5,39 @@
 {% endblock %}
 
 {% block content %}
-    <h5><a href="{% url 'categories' %}">{{category.title}}</a>/<a href="{% url 'forums' category.id %}">{{forum.title}}</a>/<a href="{% url 'topics' forum.id %}">{{topic.subject}}</a>/{{ title }}</h5>
+    <h5><a class="text-decoration-none" href="{% url 'categories' %}">{{category.title}}</a>/<a class="text-decoration-none" href="{% url 'forums' category.id %}">{{forum.title}}</a>/<a class="text-decoration-none" href="{% url 'topics' forum.id %}">{{topic.subject}}</a>/{{ title }}</h5>
+    <h1>{{ topic.subject }}</h1>
+    <h6>Тему создал {{ topic.starter }}</h6>
     {% if posts %}
         {% for post in posts %}
-            <div class="alert mt-2">
-                <p>{{ post.message }}</p>
-                {% if post.updated_at == None %}
-                     <p>{{post.created_at}}</p>
-                     <p>Автор: {{ post.created_by }}</p>
-                {% else %}
-                     <p>{{post.updated_at}}</p>
-                     <p>Изменил: {{ post.updated_by }}</p>
-                {% endif %}
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button"
-                            id="about-us" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false">Действие</button>
-                    <div class="dropdown-menu" aria-labelledby="about-us">
-                        <a class="dropdown-item" href="/post/update/{{ post.id }}">Изменить</a>
-                        <a class="dropdown-item" href="/post/delete/{{ post.id }}">Удалить</a>
+            <div class="container m-2">
+                <div class="row">
+                    <div class="col-2 border">
+                        <div class="m-1">
+                            {% if post.updated_at == None %}
+                                <p>{{post.created_at}}</p>
+                                <p>Автор: {{ post.created_by }}</p>
+                            {% else %}
+                                <p>{{post.updated_at}}</p>
+                                <p>Изменил: {{ post.updated_by }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="m-3">
+                            <div class="dropdown">
+                                <button class="btn btn-primary dropdown-toggle " type="button"
+                                        id="about-us" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">Действие</button>
+                                <div class="dropdown-menu" aria-labelledby="about-us">
+                                    <a class="dropdown-item" href="/post/update/{{ post.id }}">Изменить</a>
+                                    {% if not post.first_post %}
+                                    <a class="dropdown-item" href="/post/delete/{{ post.id }}">Удалить</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-10 border">
+                        <p>{{ post.message }}</p>
                     </div>
                 </div>
             </div>
@@ -31,15 +45,17 @@
     {% else %}
         <p>Ответы не найдены...</p>
     {% endif %}
-    {% if user.is_authenticated %}
-    <form method="post" novalidate>
-        {% csrf_token %}
-        {% include 'includes/form.html' %}
-        <button type="submit" class="btn btn-success">Отправить</button>
-    </form>
+    <div class="m-3">
+        {% if user.is_authenticated %}
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% include 'includes/form.html' %}
+                <button type="submit" class="btn btn-success">Отправить</button>
+            </form>
         {% else %}
-    <p>Чтобы написать сообщение необходимо создать аккаунт!</p>
-   {% endif %}
+            <p>Чтобы написать сообщение необходимо создать аккаунт!</p>
+        {% endif %}
+    </div>
 
 {% endblock %}
 {% block scripts %}

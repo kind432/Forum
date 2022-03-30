@@ -8,11 +8,11 @@
     <div class="mb-4">
         <a href="{% url 'new_topic' forum.id %}" class="btn btn-primary">Новая тема</a>
     </div>
-    <h5><a href="{% url 'categories' %}">{{category.title}}</a>/<a href="{% url 'forums' category.id %}">{{forum.title}}</a>/Темы</h5>
+    <h5><a class="text-decoration-none" href="{% url 'categories' %}">{{category.title}}</a>/<a class="text-decoration-none" href="{% url 'forums' category.id %}">{{forum.title}}</a>/Темы</h5>
     {% if topics %}
         {% for topic in topics %}
             <div class="alert mt-2">
-                <h3><a href="{{ topic.get_absolute_url }}">{{ topic.subject }}</a></h3>
+                <h3><a class="text-decoration-none" href="{{ topic.get_absolute_url }}">{{ topic.subject }}</a></h3>
                 <p><h6>{{ topic.last_updated }}</h6></p>
                 <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button"

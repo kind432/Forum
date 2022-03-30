@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% block content %}
-    <h5><a href="{% url 'categories' %}">{{ category.title }}</a>/<a href="{% url 'forums' category.id %}">{{ forum.title }}</a>/
-        <a href="{% url 'topics' forum.id %}">Темы</a>/Изменение темы: {{ old_topic.subject }}</h5>
+    <h5><a class="text-decoration-none" href="{% url 'categories' %}">{{ category.title }}</a>/<a class="text-decoration-none" href="{% url 'forums' category.id %}">{{ forum.title }}</a>/
+        <a class="text-decoration-none" href="{% url 'topics' forum.id %}">Темы</a>/Изменение темы: {{ old_topic.subject }}</h5>
     <form method="post" novalidate>
         {% csrf_token %}
         {% include 'includes/form.html' %}

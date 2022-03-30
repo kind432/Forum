@@ -1,4 +1,5 @@
 {% extends 'includes/base.html' %}
+{% load humanize %}
 
 {% block title %}
 {{ title }}
@@ -13,7 +14,9 @@
         {% for topic in topics %}
             <div class="alert mt-2">
                 <h3><a class="text-decoration-none" href="{{ topic.get_absolute_url }}">{{ topic.subject }}</a></h3>
-                <p><h6>{{ topic.last_updated }}</h6></p>
+                <p><small>{{ topic.starter }}</small></p>
+                <p><small>Создана {{ topic.created_at }}</small></p>
+                <p><small>Изменена {{ topic.last_updated|naturaltime }}</small></p>
                 <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button"
                             id="about-us" data-toggle="dropdown" aria-haspopup="true"

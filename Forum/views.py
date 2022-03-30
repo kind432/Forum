@@ -4,6 +4,8 @@ from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import permission_required
+from django.utils import timezone
+
 from .forms import *
 from .models import *
 # Create your views here.
@@ -181,8 +183,7 @@ def new_topic(request, forum_id):
             post = PostsModel.objects.create(
                 message=form.cleaned_data.get('message'),
                 topic=topic,
-                first_post=True,
-                created_by=user
+                created_by=user,
             )
             return redirect('topics', forum_id=forum.id)
     else:
@@ -198,7 +199,8 @@ def new_topic(request, forum_id):
 #изменение топика
 @permission_required('Forum.change_topicsmodel')
 def topic_update(request,topic_id):
-    first_message = PostsModel.objects.get(topic_id=topic_id, first_post=True)
+    f_message = PostsModel.objects.filter(topic_id=topic_id)
+    first_message = f_message[0]
     try:
         old_data = get_object_or_404(TopicsModel,id=topic_id)
         forum = get_object_or_404(ForumsModel, id=old_data.forum.id)
@@ -209,7 +211,7 @@ def topic_update(request,topic_id):
         form = TopicsForm(request.POST, instance=old_data)
         if form.is_valid():
             first_message.message = form.cleaned_data.get('message')
-            first_message.updated_at = datetime.datetime.now()
+            first_message.updated_at = timezone.now()
             first_message.updated_by = request.user
             first_message.save()
             form.save()
@@ -228,6 +230,7 @@ def topic_update(request,topic_id):
             'old_topic': old_data,
         }
         return render(request, 'topics/change.html', context)
+
 
 #Удаление топика
 @permission_required('Forum.delete_topicsmodel')
@@ -288,7 +291,7 @@ def post_update(request,post_id):
         raise Http404('Пост не найден')
     if request.method == 'POST':
         old_data.updated_by=request.user
-        old_data.updated_at=datetime.datetime.now()
+        old_data.updated_at= timezone.now()
         form = PostsForm(request.POST, instance=old_data)
         if form.is_valid():
             form.save()

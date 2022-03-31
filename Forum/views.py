@@ -380,10 +380,10 @@ def news_view(request):
     query_set = []
     for i in range(len(response["articles"])):
 
-        new = data(response["articles"][i]["source"]["name"], response["articles"][i]["author"],
+        news = News(response["articles"][i]["source"]["name"], response["articles"][i]["author"],
                    response["articles"][i]["title"], response["articles"][i]["description"],
                    response["articles"][i]["url"], response["articles"][i]["publishedAt"])
-        query_set.append(new)
+        query_set.append(news)
     context ={
         'title': 'Новости',
         'forms': query_set

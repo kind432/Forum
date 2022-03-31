@@ -5,7 +5,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import permission_required
 from django.utils import timezone
-
+import requests
+import json
 from .forms import *
 from .models import *
 # Create your views here.
@@ -21,6 +22,7 @@ def home_view(request):
 def categories_view(request):
     try:
         categories = CategoriesModel.objects.all()
+        print(type(categories))
     except CategoriesModel.DoesNotExist:
         raise Http404
     context = {
@@ -210,6 +212,7 @@ def topic_update(request,topic_id):
     if request.method == 'POST':
         form = TopicsForm(request.POST, instance=old_data)
         if form.is_valid():
+
             first_message.message = form.cleaned_data.get('message')
             first_message.updated_at = timezone.now()
             first_message.updated_by = request.user
@@ -217,6 +220,7 @@ def topic_update(request,topic_id):
             form.save()
             return redirect('topics', forum_id=forum.id)
     else:
+        print(first_message.message)
         data = {
             'subject': old_data.subject,
             'message': first_message.message
@@ -339,3 +343,34 @@ def register(request):
     else:
         user_form = UserRegistrationForm()
     return render(request, 'registration/register.html', {'user_form': user_form})
+
+def user_page(request):
+    try:
+        user = request.user
+
+    except User.DoesNotExist:
+        raise Http404
+    context = {
+        'title': 'Пользователь',
+        'user': user,
+    }
+    return render(request, 'registration/userpage.html', context)
+
+
+def user_change_password(request):
+    form = UserChangePasswordForm(request.POST)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            if form.cleaned_data.get('new_password') != form.cleaned_data.get('new_password2'):
+                raise forms.ValidationError('Passwords don\'t match.')
+            user = request.user
+            new_password = form.cleaned_data.get('new_password')
+            user.set_password(new_password)
+            user.save()
+            return render(request, 'registration/login.html')
+
+    else:
+        form = UserChangePasswordForm()
+    return render(request, 'registration/password_reset.html', {'form':form})
+

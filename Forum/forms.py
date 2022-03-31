@@ -67,3 +67,10 @@ class UserRegistrationForm(ModelForm):
         if cd['password'] != cd['password2']:
             raise forms.ValidationError('Passwords don\'t match.')
         return cd['password2']
+
+class UserChangePasswordForm(ModelForm):
+    new_password = forms.CharField()
+    new_password2 = forms.CharField()
+    class Meta:
+        model = User
+        fields = ('new_password','new_password2')

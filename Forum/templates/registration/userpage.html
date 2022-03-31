@@ -1,0 +1,23 @@
+{% extends 'includes/base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+
+            <div class="alert mt-2">
+                <h2>Никнейм:{{ user.username }}</h2>
+            <h3>Имя:{{ user.first_name }}</h3>
+            <h4>Почта:{{ user.email }}</h4>
+
+            </div>
+<div>
+        <a class="btn btn-link" href="{% url 'change_password' %}">Сменить пароль</a></p>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+{% endblock %}

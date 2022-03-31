@@ -15,7 +15,7 @@
         </ul>
         <div class="col-md-6 text-end">
     {% if user.is_authenticated %}
-        <p>Добрый день, {{ user.get_username }}</p>
+        <a href="{% url 'user_page' %}">Добрый день, {{ user.get_username }}</a>
         <a class="btn btn-primary" href="{% url 'logout'%}?next={{request.path}}">Выйти</a>
     {% else %}
         <a class="btn btn-primary" href="{% url 'login'%}?next={{request.path}}">Войти</a>

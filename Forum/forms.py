@@ -74,3 +74,12 @@ class UserChangePasswordForm(ModelForm):
     class Meta:
         model = User
         fields = ('new_password','new_password2')
+
+class News:
+    def __init__(self,soursName,author,title,description,href,date):
+        self.sourseName = soursName
+        self.author = author
+        self.title = title
+        self.description = description
+        self.href = href
+        self.date = date

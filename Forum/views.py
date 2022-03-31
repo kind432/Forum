@@ -9,6 +9,7 @@ import requests
 import json
 from .forms import *
 from .models import *
+from ForumProject.settings import api_url
 # Create your views here.
 
 #Главная страница
@@ -22,7 +23,7 @@ def home_view(request):
 def categories_view(request):
     try:
         categories = CategoriesModel.objects.all()
-        print(type(categories))
+        print(categories)
     except CategoriesModel.DoesNotExist:
         raise Http404
     context = {
@@ -374,3 +375,17 @@ def user_change_password(request):
         form = UserChangePasswordForm()
     return render(request, 'registration/password_reset.html', {'form':form})
 
+def news_view(request):
+    response = requests.get(api_url, verify=False).json()
+    query_set = []
+    for i in range(len(response["articles"])):
+
+        new = data(response["articles"][i]["source"]["name"], response["articles"][i]["author"],
+                   response["articles"][i]["title"], response["articles"][i]["description"],
+                   response["articles"][i]["url"], response["articles"][i]["publishedAt"])
+        query_set.append(new)
+    context ={
+        'title': 'Новости',
+        'forms': query_set
+    }
+    return render(request, 'news.html', context)

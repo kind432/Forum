@@ -21,5 +21,6 @@ urlpatterns = [
     path('post/delete/<int:post_id>',post_delete,name='post_delete'),
     path('user/',user_page,name='user_page'),
     path('changepassword/',user_change_password,name='change_password'),
+    path('news/',news_view,name='news'),
 
 ]

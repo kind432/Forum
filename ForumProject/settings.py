@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
+api_url = "http://newsapi.org/v2/top-headlines?country=ru&apiKey=644b59a86fb44e8cbd62218f714d8b8b"
 # Application definition
 
 INSTALLED_APPS = [

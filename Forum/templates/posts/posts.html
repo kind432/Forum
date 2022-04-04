@@ -9,10 +9,10 @@
 {% block content %}
     <h5><a class="text-decoration-none" href="{% url 'categories' %}">{{category.title}}</a>/<a class="text-decoration-none" href="{% url 'forums' category.id %}">{{forum.title}}</a>/<a class="text-decoration-none" href="{% url 'topics' forum.id %}">{{topic.subject}}</a>/{{ title }}</h5>
     <h1>{{ topic.subject }}</h1>
-    <small>Создатель темы: <p class="text-muted">{{ topic.starter }}</p></small>
+    <small>Создатель темы: <p>{{ topic.starter }}</p></small>
     {% if posts %}
         {% for post in posts %}
-            <div class="container {% if forloop.first %} mb-5 mt-4 border border-primary {% else %} mb-2 border border-secondary {% endif %}">
+            <div class="container {% if forloop.first and posts.number == 1 %} mb-5 mt-4 border border-primary {% else %}  mb-2 border border-secondary {% endif %}">
                 <div class="row p-3">
                     <div class="row">
                         <div class="col-2 border">
@@ -21,7 +21,7 @@
                         <div class="col-10">
                             <div class="row mb-3">
                                 <div class="col-6">
-                                    <strong class="text-muted">{{ post.created_by.username }}</strong>
+                                    <strong>{{ post.created_by.username }}</strong>
                                 </div>
                                 <div class="col-6 text-right">
                                     <div class="col text-right">
@@ -55,10 +55,11 @@
                 </div>
             </div>
         {% endfor %}
+        {% include "includes/pagination.html" with page=posts %}
     {% else %}
         <p>Ответы не найдены...</p>
     {% endif %}
- {% include "includes/pagination.html" with page=posts %}
+
     <div class="m-3">
         {% if user.is_authenticated %}
             <form method="post" novalidate>
@@ -70,8 +71,8 @@
             <p>Чтобы написать сообщение необходимо создать аккаунт!</p>
         {% endif %}
     </div>
-
 {% endblock %}
+
 {% block scripts %}
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>

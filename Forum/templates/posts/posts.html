@@ -58,6 +58,7 @@
     {% else %}
         <p>Ответы не найдены...</p>
     {% endif %}
+ {% include "includes/pagination.html" with page=posts %}
     <div class="m-3">
         {% if user.is_authenticated %}
             <form method="post" novalidate>

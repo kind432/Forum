@@ -31,6 +31,7 @@
     {% else %}
         <p>Темы не найдены...</p>
     {% endif %}
+    {% include "includes/pagination.html" with page=topics %}
 {% endblock %}
 {% block scripts %}
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>

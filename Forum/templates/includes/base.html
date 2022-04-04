@@ -13,7 +13,7 @@
         <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
             <li><a href="{% url 'home' %}" class="nav-link px-2 link-secondary">Главная</a></li>
         </ul>
-        <div class="col-md-6 text-end">
+        <div class="col-md-6 text-end" >
     {% if user.is_authenticated %}
         <a href="{% url 'user_page' %}">Добрый день, {{ user.get_username }}</a>
         <a class="btn btn-primary" href="{% url 'logout'%}?next={{request.path}}">Выйти</a>

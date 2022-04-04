@@ -5,12 +5,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import permission_required
 from django.utils import timezone
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import requests
 import json
 from .forms import *
 from .models import *
 from ForumProject.settings import api_url
 # Create your views here.
+
 
 #Главная страница
 def home_view(request):
@@ -21,14 +23,23 @@ def home_view(request):
 
 #Категории
 def categories_view(request):
+
     try:
         categories = CategoriesModel.objects.all()
-        print(categories)
+        paginator = Paginator(categories, 10)
+        page = request.GET.get('page')
+        try:
+            categories_all = paginator.page(page)
+        except PageNotAnInteger:
+            categories_all= paginator.page(1)
+        except EmptyPage:
+            categories_all = paginator.page(paginator.num_pages)
     except CategoriesModel.DoesNotExist:
         raise Http404
     context = {
+        'page': page,
         'title': 'Категории',
-        'categories': categories,
+        'categories': categories_all,
     }
     return render(request, 'categories/categories.html', context)
 @permission_required('Forum.add_categoriesmodel')
@@ -88,11 +99,20 @@ def forums_view(request, category_id):
     try:
         forums = ForumsModel.objects.filter(category=category_id)
         category = CategoriesModel.objects.get(id=category_id)
+        paginator = Paginator(forums, 10)
+        page = request.GET.get('page')
+        try:
+            forums_all = paginator.page(page)
+        except PageNotAnInteger:
+            forums_all = paginator.page(1)
+        except EmptyPage:
+            forums_all = paginator.page(paginator.num_pages)
     except ForumsModel.DoesNotExist:
         raise Http404
     context = {
+        'page': page,
         'title': 'Форумы',
-        'forums': forums,
+        'forums': forums_all,
         'category': category,
     }
     return render(request, 'forums/forums.html', context)
@@ -160,11 +180,19 @@ def topics_view(request, forum_id):
         topics = TopicsModel.objects.filter(forum=forum_id)
         forum = ForumsModel.objects.get(id=forum_id)
         category = CategoriesModel.objects.get(id=forum.category.id)
+        paginator = Paginator(topics, 10)
+        page = request.GET.get('page')
+        try:
+            topics_all = paginator.page(page)
+        except PageNotAnInteger:
+            topics_all = paginator.page(1)
+        except EmptyPage:
+            topics_all = paginator.page(paginator.num_pages)
     except TopicsModel.DoesNotExist:
         raise Http404
     context = {
         'title': 'Темы',
-        'topics': topics,
+        'topics': topics_all,
         'forum': forum,
         'category': category,
     }
@@ -258,6 +286,14 @@ def posts_view(request, topic_id):
         forum = ForumsModel.objects.get(id=topic.forum.id)
         category = CategoriesModel.objects.get(id=forum.category.id)
         posts = PostsModel.objects.filter(topic=topic_id)
+        paginator = Paginator(posts, 10)
+        page = request.GET.get('page')
+        try:
+            posts_all = paginator.page(page)
+        except PageNotAnInteger:
+            posts_all = paginator.page(1)
+        except EmptyPage:
+            posts_all = paginator.page(paginator.num_pages)
     except PostsModel.DoesNotExist:
         raise Http404
     user = request.user
@@ -276,7 +312,7 @@ def posts_view(request, topic_id):
         form = PostsForm()
     context = {
         'title': 'Ответы',
-        'posts': posts,
+        'posts': posts_all,
         'form': form,
         'topic': topic,
         'forum': forum,

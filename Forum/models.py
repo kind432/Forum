@@ -59,7 +59,7 @@ class PostsModel(models.Model):
     updated_at = models.DateTimeField('Изменено в', null=True)
     created_by = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     updated_by = models.ForeignKey(User, null=True, related_name='+', on_delete=models.CASCADE)
-
+    likes = models.IntegerField(verbose_name='Нравится', default=0)
     def __str__(self):
         return self.message
 

@@ -17,6 +17,7 @@ urlpatterns = [
     path('topic/<int:topic_id>/posts/', posts_view, name='posts'),
     path('topic/update/<int:topic_id>',topic_update,name='topic_update'),
     path('topic/delete/<int:topic_id>',topic_delete,name='topic_delete'),
+    path('post/addlike/<int:post_id>',add_like,name='add_like'),
     path('post/update/<int:post_id>',post_update,name='post_update'),
     path('post/delete/<int:post_id>',post_delete,name='post_delete'),
     path('user/',user_page,name='user_page'),

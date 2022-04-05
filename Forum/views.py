@@ -1,5 +1,6 @@
 import datetime
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, Group
@@ -319,6 +320,15 @@ def posts_view(request, topic_id):
         'category': category,
     }
     return render(request, 'posts/posts.html', context)
+
+def add_like(request, post_id):
+    try:
+        post = get_object_or_404(PostsModel, id=post_id)
+        post.likes += 1
+        post.save()
+    except ObjectDoesNotExist:
+        return Http404
+    return redirect('posts', post.topic.id)
 
 #изменение поста
 @permission_required('Forum.change_postsmodel')

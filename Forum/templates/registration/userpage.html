@@ -5,14 +5,12 @@
 {% endblock %}
 
 {% block content %}
-
             <div class="alert mt-2">
                 <h2>Никнейм:{{ user.username }}</h2>
-            <h3>Имя:{{ user.first_name }}</h3>
-            <h4>Почта:{{ user.email }}</h4>
-
+                <h3>Имя:{{ user.first_name }}</h3>
+                <h4>Почта:{{ user.email }}</h4>
             </div>
-<div>
+    <div>
         <a class="btn btn-link" href="{% url 'change_password' %}">Сменить пароль</a></p>
     </div>
 {% endblock %}

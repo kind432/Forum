@@ -24,7 +24,6 @@ def home_view(request):
 
 #Категории
 def categories_view(request):
-
     try:
         categories = CategoriesModel.objects.all()
         paginator = Paginator(categories, 10)
@@ -37,15 +36,17 @@ def categories_view(request):
             categories_all = paginator.page(paginator.num_pages)
     except CategoriesModel.DoesNotExist:
         raise Http404
+        return render(request, 'error.html')
     context = {
         'page': page,
         'title': 'Категории',
         'categories': categories_all,
     }
     return render(request, 'categories/categories.html', context)
-@permission_required('Forum.add_categoriesmodel')
+
 
 #Новая категория
+@permission_required('Forum.add_categoriesmodel')
 def new_category(request):
     if request.method == 'POST':
         form = CategoriesForm(request.POST)

@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 
 
-
 class CategoriesModel(models.Model):
     title = models.CharField('Название', max_length=30, unique=True)
     description = models.TextField('Описание', max_length=100)
